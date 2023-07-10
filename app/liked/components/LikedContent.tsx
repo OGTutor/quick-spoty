@@ -7,6 +7,7 @@ import { Song } from 'types';
 import LikeButton from '@/components/LikeButton';
 import MediaItem from '@/components/MediaItem';
 
+import useOnPlay from '@/hooks/useOnPlay';
 import { useUser } from '@/hooks/useUser';
 
 interface LikedContentProps {
@@ -16,6 +17,8 @@ interface LikedContentProps {
 const LikedContent: FC<LikedContentProps> = ({ songs }) => {
 	const router = useRouter();
 	const { isLoading, user } = useUser();
+
+	const onPlay = useOnPlay(songs);
 
 	useEffect(() => {
 		if (!isLoading && !user) router.replace('/');
@@ -44,7 +47,10 @@ const LikedContent: FC<LikedContentProps> = ({ songs }) => {
 					gap-x-4 w-full"
 				>
 					<div className="flex-1">
-						<MediaItem onClick={() => {}} data={song} />
+						<MediaItem
+							onClick={(id: string) => onPlay(id)}
+							data={song}
+						/>
 					</div>
 					<LikeButton songId={song.id} />
 				</div>
