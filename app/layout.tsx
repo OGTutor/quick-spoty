@@ -1,5 +1,6 @@
 import { Figtree } from 'next/font/google';
 
+import Player from '@/components/Player';
 import Sidebar from '@/components/Sidebar';
 
 import './globals.css';
@@ -33,6 +34,7 @@ export default async function RootLayout({
 					<UserProvider>
 						<ModalProvider />
 						<Sidebar songs={userSongs}>{children}</Sidebar>
+						<Player />
 					</UserProvider>
 				</SupabaseProvider>
 			</body>
