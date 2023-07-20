@@ -3,13 +3,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Song } from 'types';
 
-const useGetSongById = (id?: string) => {
+const useSongById = (id?: string) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [song, setSong] = useState<Song | undefined>(undefined);
 	const { supabaseClient } = useSessionContext();
 
 	useEffect(() => {
-		if (!id) return;
+		if (!id) {
+			return;
+		}
 
 		setIsLoading(true);
 
@@ -30,15 +32,15 @@ const useGetSongById = (id?: string) => {
 		};
 
 		fetchSong();
-	}, [supabaseClient, id]);
+	}, [id, supabaseClient]);
 
 	return useMemo(
 		() => ({
 			isLoading,
 			song,
 		}),
-		[song, isLoading]
+		[isLoading, song]
 	);
 };
 
-export default useGetSongById;
+export default useSongById;

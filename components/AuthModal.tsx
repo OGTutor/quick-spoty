@@ -14,10 +14,11 @@ import useAuthModal from '@/hooks/useAuthModal';
 import Modal from './Modal';
 
 const AuthModal = () => {
-	const supabaseClient = useSupabaseClient();
-	const router = useRouter();
 	const { session } = useSessionContext();
-	const { isOpen, onClose } = useAuthModal();
+	const router = useRouter();
+	const { onClose, isOpen } = useAuthModal();
+
+	const supabaseClient = useSupabaseClient();
 
 	useEffect(() => {
 		if (session) {
@@ -27,21 +28,22 @@ const AuthModal = () => {
 	}, [session, router, onClose]);
 
 	const onChange = (open: boolean) => {
-		if (!open) onClose();
+		if (!open) {
+			onClose();
+		}
 	};
 
 	return (
 		<Modal
 			title="Welcome back"
-			description="Login to your account"
+			description="Login to your account."
 			isOpen={isOpen}
 			onChange={onChange}
 		>
 			<Auth
-				theme="dark"
-				providers={['github']}
-				magicLink
 				supabaseClient={supabaseClient}
+				providers={['github']}
+				magicLink={true}
 				appearance={{
 					theme: ThemeSupa,
 					variables: {
@@ -53,6 +55,7 @@ const AuthModal = () => {
 						},
 					},
 				}}
+				theme="dark"
 			/>
 		</Modal>
 	);

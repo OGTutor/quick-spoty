@@ -1,8 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
+import { useEffect, useState } from 'react';
 
 import Button from '@/components/Button';
 
@@ -11,7 +10,7 @@ import { useUser } from '@/hooks/useUser';
 
 import { postData } from '@/libs/helpers';
 
-const AccountContent: FC = () => {
+const AccountContent = () => {
 	const router = useRouter();
 	const subscribeModal = useSubscribeModal();
 	const { isLoading, subscription, user } = useUser();
@@ -22,7 +21,7 @@ const AccountContent: FC = () => {
 		if (!isLoading && !user) {
 			router.replace('/');
 		}
-	}, [router, user, isLoading]);
+	}, [isLoading, user, router]);
 
 	const redirectToCustomerPortal = async () => {
 		setLoading(true);
@@ -32,9 +31,7 @@ const AccountContent: FC = () => {
 			});
 			window.location.assign(url);
 		} catch (error) {
-			if (error) {
-				toast.error((error as Error).message);
-			}
+			if (error) return alert((error as Error).message);
 		}
 		setLoading(false);
 	};
@@ -56,12 +53,13 @@ const AccountContent: FC = () => {
 				<div className="flex flex-col gap-y-4">
 					<p>
 						You are currently on the
-						<b>{subscription?.prices?.products?.name} plan.</b>
+						<b> {subscription?.prices?.products?.name} </b>
+						plan.
 					</p>
 					<Button
-						className="w-[300px]"
 						disabled={loading || isLoading}
 						onClick={redirectToCustomerPortal}
+						className="w-[300px]"
 					>
 						Open customer portal
 					</Button>

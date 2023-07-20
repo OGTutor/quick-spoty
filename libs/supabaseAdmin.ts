@@ -24,9 +24,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 	const { error } = await supabaseAdmin
 		.from('products')
 		.upsert([productData]);
-
 	if (error) throw error;
-
 	console.log(`Product inserted/updated: ${product.id}`);
 };
 
@@ -46,9 +44,7 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
 	};
 
 	const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
-
 	if (error) throw error;
-
 	console.log(`Price inserted/updated: ${price.id}`);
 };
 
@@ -64,26 +60,24 @@ const createOrRetrieveCustomer = async ({
 		.select('stripe_customer_id')
 		.eq('id', uuid)
 		.single();
-
 	if (error || !data?.stripe_customer_id) {
 		const customerData: {
 			metadata: { supabaseUUID: string };
 			email?: string;
-		} = { metadata: { supabaseUUID: uuid } };
-
+		} = {
+			metadata: {
+				supabaseUUID: uuid,
+			},
+		};
 		if (email) customerData.email = email;
-
 		const customer = await stripe.customers.create(customerData);
 		const { error: supabaseError } = await supabaseAdmin
 			.from('customers')
 			.insert([{ id: uuid, stripe_customer_id: customer.id }]);
-
 		if (supabaseError) throw supabaseError;
-
-		console.log(`New customer created and inserted for ${uuid}`);
+		console.log(`New customer created and inserted for ${uuid}.`);
 		return customer.id;
 	}
-
 	return data.stripe_customer_id;
 };
 
@@ -94,8 +88,7 @@ const copyBillingDetailsToCustomer = async (
 	const customer = payment_method.customer as string;
 	const { name, phone, address } = payment_method.billing_details;
 	if (!name || !phone || !address) return;
-
-	// @ts-ignore
+	//@ts-ignore
 	await stripe.customers.update(customer, { name, phone, address });
 	const { error } = await supabaseAdmin
 		.from('users')
@@ -104,7 +97,6 @@ const copyBillingDetailsToCustomer = async (
 			payment_method: { ...payment_method[payment_method.type] },
 		})
 		.eq('id', uuid);
-
 	if (error) throw error;
 };
 
@@ -118,7 +110,6 @@ const manageSubscriptionStatusChange = async (
 		.select('id')
 		.eq('stripe_customer_id', customerId)
 		.single();
-
 	if (noCustomerError) throw noCustomerError;
 
 	const { id: uuid } = customerData!;
@@ -126,7 +117,6 @@ const manageSubscriptionStatusChange = async (
 	const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
 		expand: ['default_payment_method'],
 	});
-
 	const subscriptionData: Database['public']['Tables']['subscriptions']['Insert'] =
 		{
 			id: subscription.id,
@@ -165,19 +155,17 @@ const manageSubscriptionStatusChange = async (
 	const { error } = await supabaseAdmin
 		.from('subscriptions')
 		.upsert([subscriptionData]);
-
 	if (error) throw error;
-
 	console.log(
-		`Inserted / Updated subscription [${subscription.id} for ${uuid}]`
+		`Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
 	);
 
-	if (createAction && subscription.default_payment_method && uuid) {
+	if (createAction && subscription.default_payment_method && uuid)
+		//@ts-ignore
 		await copyBillingDetailsToCustomer(
 			uuid,
 			subscription.default_payment_method as Stripe.PaymentMethod
 		);
-	}
 };
 
 export {

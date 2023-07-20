@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { FC, useMemo } from 'react';
+import { useMemo } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { HiHome } from 'react-icons/hi';
 import { twMerge } from 'tailwind-merge';
@@ -18,7 +18,7 @@ interface SidebarProps {
 	songs: Song[];
 }
 
-const Sidebar: FC<SidebarProps> = ({ children, songs }) => {
+const Sidebar = ({ children, songs }: SidebarProps) => {
 	const pathname = usePathname();
 	const player = usePlayer();
 
@@ -33,8 +33,8 @@ const Sidebar: FC<SidebarProps> = ({ children, songs }) => {
 			{
 				icon: BiSearch,
 				label: 'Search',
-				active: pathname === '/search',
 				href: '/search',
+				active: pathname === '/search',
 			},
 		],
 		[pathname]
@@ -43,13 +43,24 @@ const Sidebar: FC<SidebarProps> = ({ children, songs }) => {
 	return (
 		<div
 			className={twMerge(
-				`flex h-full`,
-				player.activeId && 'h-[calc(100% - 80px)]'
+				`
+        flex 
+        h-full
+        `,
+				player.activeId && 'h-[calc(100%-80px)]'
 			)}
 		>
 			<div
-				className="hidden md:flex flex-col gap-y-2
-				bg-black h-full w-[300px] p-2"
+				className="
+          hidden 
+          md:flex 
+          flex-col 
+          gap-y-2 
+          bg-black 
+          h-full 
+          w-[300px] 
+          p-2
+        "
 			>
 				<Box>
 					<div className="flex flex-col gap-y-4 px-5 py-4">

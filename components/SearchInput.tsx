@@ -1,14 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import queryString from 'query-string';
-import { FC, useEffect, useState } from 'react';
+import qs from 'query-string';
+import { useEffect, useState } from 'react';
 
 import useDebounce from '@/hooks/useDebounce';
 
 import Input from './Input';
 
-const SearchInput: FC = () => {
+const SearchInput = () => {
 	const router = useRouter();
 	const [value, setValue] = useState<string>('');
 	const debouncedValue = useDebounce<string>(value, 500);
@@ -18,13 +18,13 @@ const SearchInput: FC = () => {
 			title: debouncedValue,
 		};
 
-		const url = queryString.stringifyUrl({
+		const url = qs.stringifyUrl({
 			url: '/search',
-			query: query,
+			query,
 		});
 
 		router.push(url);
-	}, [router, debouncedValue]);
+	}, [debouncedValue, router]);
 
 	return (
 		<Input

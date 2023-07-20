@@ -15,7 +15,7 @@ const font = Figtree({ subsets: ['latin'] });
 
 export const metadata = {
 	title: 'Quick Spoty',
-	description: 'Listen to music!',
+	description: 'Quick Spoty',
 };
 
 export const revalidate = 0;
@@ -25,8 +25,8 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const userSongs = await getSongsByUserId();
 	const products = await getActiveProductsWithPrices();
+	const userSongs = await getSongsByUserId();
 
 	return (
 		<html lang="en">

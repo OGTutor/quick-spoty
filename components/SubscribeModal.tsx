@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Price, ProductWithPrice } from 'types';
 
@@ -26,7 +26,7 @@ const formatPrice = (price: Price) => {
 	return priceString;
 };
 
-const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
+const SubscribeModal: FC<SubscribeModalProps> = ({ products }) => {
 	const subscribeModal = useSubscribeModal();
 	const { user, isLoading, subscription } = useUser();
 

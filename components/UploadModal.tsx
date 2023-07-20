@@ -15,10 +15,11 @@ import Input from './Input';
 import Modal from './Modal';
 
 const UploadModal = () => {
-	const uploadModal = useUploadModal();
 	const [isLoading, setIsLoading] = useState(false);
-	const { user } = useUser();
+
+	const uploadModal = useUploadModal();
 	const supabaseClient = useSupabaseClient();
+	const { user } = useUser();
 	const router = useRouter();
 
 	const { register, handleSubmit, reset } = useForm<FieldValues>({
@@ -88,7 +89,6 @@ const UploadModal = () => {
 				});
 
 			if (supabaseError) {
-				setIsLoading(false);
 				return toast.error(supabaseError.message);
 			}
 
@@ -130,20 +130,22 @@ const UploadModal = () => {
 				<div>
 					<div className="pb-1">Select a song file</div>
 					<Input
-						id="song"
-						type="file"
+						placeholder="test"
 						disabled={isLoading}
+						type="file"
 						accept=".mp3"
+						id="song"
 						{...register('song', { required: true })}
 					/>
 				</div>
 				<div>
 					<div className="pb-1">Select an image</div>
 					<Input
-						id="image"
-						type="file"
+						placeholder="test"
 						disabled={isLoading}
+						type="file"
 						accept="image/*"
+						id="image"
 						{...register('image', { required: true })}
 					/>
 				</div>
